@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://dofmxgc3gjtdq"]
+
+[ext_resource type="Script" uid="uid://b2cingem43nfs" path="res://entities/scripts/area_2d.gd" id="1_l68el"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yboef"]
+size = Vector2(22, 44)
+
+[node name="Laser2D" type="Area2D"]
+script = ExtResource("1_l68el")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -1)
+shape = SubResource("RectangleShape2D_yboef")
+
+[node name="Line2D" type="Line2D" parent="."]
+position = Vector2(0.38, 2.7332401)
+scale = Vector2(0.5, 0.43920478)
+points = PackedVector2Array(-1, -5, -1, -50, -1, 33)
+width = 1.76
+default_color = Color(0.9760813, 0.9722087, 0.97582716, 1)
