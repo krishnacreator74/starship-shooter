@@ -53,12 +53,24 @@ func shoot_laser():
 	if laser_level == 1:
 		nodes = [$Muzzle]
 		angles = [0]
+		if $CPUParticles2D:
+			$CPUParticles2D.restart()
 	elif laser_level == 2:
 		nodes = [$Muzzle, $MuzzleLeft, $MuzzleRight]
 		angles = [0, -25, 25]
+		if $CPUParticles2D and $CPUParticles2D2 and $CPUParticles2D3:
+			$CPUParticles2D.restart()
+			$CPUParticles2D2.restart()
+			$CPUParticles2D3.restart()
+			
 	elif laser_level == 3:
 		nodes = [$Muzzle, $MuzzleLeft, $MuzzleRight, $MuzzleLeft, $MuzzleRight]
 		angles = [0, -25, 25, -50, 50]
+		if $CPUParticles2D and $CPUParticles2D2 and $CPUParticles2D3:
+			$CPUParticles2D.restart()
+			$CPUParticles2D2.restart()
+			$CPUParticles2D3.restart()
+
 
 	for i in range(nodes.size()):
 		var muzzle = nodes[i]
@@ -70,8 +82,7 @@ func shoot_laser():
 		bolt.direction = Vector2.UP  # still moves UP, but Area2D multiplies by rotation
 		bolt.modulate = Color(0.2, 0.8, 1.0)
 
-	if $CPUParticles2D:
-		$CPUParticles2D.restart()
+
 
 
 func _cooldown() -> void:
