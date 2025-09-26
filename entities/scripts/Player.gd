@@ -1,18 +1,29 @@
 extends CharacterBody2D
 
 @export var speed := 400
+@export var bolt_scene: PackedScene
+@export var fire_rate := 0.3
+@export var margin := 50   # 🚧 padding from the screen edges
+var can_shoot := true
 
 func _physics_process(delta):
 	var direction := Input.get_vector("left", "right", "up", "down")
 	velocity = direction * speed
 	move_and_slide()
 
+	# Clamp inside camera view
+	var cam := get_viewport().get_camera_2d()
+	if cam:
+		var viewport_size: Vector2 = get_viewport().get_visible_rect().size
+		var half_size := viewport_size * 0.5 * cam.zoom  # account for zoom
+		var top_left := cam.global_position - half_size
+		var bottom_right := cam.global_position + half_size
+
+		position.x = clamp(position.x, top_left.x + margin, bottom_right.x - margin)
+		position.y = clamp(position.y, top_left.y + margin, bottom_right.y - margin)
+
 	if Input.is_action_pressed("shoot"):
 		shoot_laser()
-		
-@export var bolt_scene: PackedScene   # Drag your LaserBolt.tscn here in the editor
-@export var fire_rate := 0.3
-var can_shoot := true
 
 func shoot_laser():
 	if not can_shoot:
@@ -24,8 +35,8 @@ func shoot_laser():
 	var bolt = bolt_scene.instantiate()
 	get_tree().current_scene.add_child(bolt)
 	bolt.global_position = muzzle
-	bolt.direction = Vector2.UP   # 🚀 goes upward
-	bolt.modulate = Color(0.2, 0.8, 1.0)  # 🔵 player color
+	bolt.direction = Vector2.UP
+	bolt.modulate = Color(0.2, 0.8, 1.0)
 	if $CPUParticles2D:
 		$CPUParticles2D.restart()
 
