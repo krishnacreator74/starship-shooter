@@ -1,4 +1,3 @@
-# res://entities/scripts/LaserShooter.gd
 extends Node
 
 static func shoot_lasers(
@@ -7,13 +6,33 @@ static func shoot_lasers(
 	direction: Vector2,
 	color: Color,
 	angles: Array = [],
-	parent: Node = null
+	parent: Node = null,
+	laser_sound: AudioStream = null
 ) -> void:
 	if parent == null:
-		push_error("LaserShooter: parent node must be passed to add lasers!")
+		push_error("LaserShooter: parent node must be passed!")
 		return
 
-	for i in muzzle_positions.size():
+
+	var laser_count = muzzle_positions.size()
+
+	# 🔊 Play ONE sound for the whole batch, with proper attenuation
+	if laser_sound:
+		var sfx = AudioStreamPlayer2D.new()
+		parent.add_child(sfx)
+		sfx.stream = laser_sound
+		sfx.autoplay = false
+		
+		# attenuation: -6 dB per extra laser, max -24 dB
+		var volume_db = -6.0 * float(laser_count - 1)
+		volume_db = clamp(volume_db, -24.0, 0.0)
+		sfx.volume_db = volume_db
+
+		sfx.play()
+		sfx.connect("finished", Callable(sfx, "queue_free"))
+
+	# 🔫 Spawn lasers
+	for i in range(laser_count):
 		var muzzle = muzzle_positions[i]
 		if not is_instance_valid(muzzle):
 			continue
@@ -24,6 +43,10 @@ static func shoot_lasers(
 
 		# Rotate laser according to angle
 		var angle = 0.0
+		if i < angles.size():
+			angle = deg_to_rad(angles[i])
+		bolt.rotation = angle      # ✅ set rotation
+		bolt.direction = Vector2.UP
 		if i < angles.size():
 			angle = deg_to_rad(angles[i])
 		bolt.direction = direction.rotated(angle)

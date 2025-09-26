@@ -8,15 +8,6 @@ extends Area2D
 var direction := Vector2.UP  # default goes up
 
 func _ready():
-	# play sound immediately
-	if laser_sound:
-		var sfx = AudioStreamPlayer2D.new()
-		add_child(sfx)
-		sfx.stream = laser_sound
-		sfx.volume_db = 0
-		sfx.autoplay = false
-		sfx.play()
-		sfx.connect("finished", Callable(sfx, "queue_free"))
 
 	# auto destroy after lifetime
 	await get_tree().create_timer(lifetime).timeout

@@ -7,8 +7,8 @@ extends CharacterBody2D
 var can_shoot := true
 var laser_level := 1  # 1 = single laser, 2 = triple, 3 = 5-laser spread
 var muzzle_nodes: Array
-
 var LaserShooter = preload("res://entities/scripts/LaserShooter.gd")
+var laser_sound = preload("res://assests/Laser1-sfx.mp3")
 
 func _ready():
 	# Collect muzzle nodes (make sure these exist in your Player scene)
@@ -20,6 +20,7 @@ func upgrade_laser():
 		print("Laser upgraded to level %d" % laser_level)
 
 func _physics_process(delta):
+
 	var direction := Input.get_vector("left", "right", "up", "down")
 	velocity = direction * speed
 	move_and_slide()
@@ -65,22 +66,23 @@ func shoot_laser():
 			
 	elif laser_level == 3:
 		nodes = [$Muzzle, $MuzzleLeft, $MuzzleRight, $MuzzleLeft, $MuzzleRight]
-		angles = [0, -25, 25, -50, 50]
+		angles = [0, -15, 15, -25, 25]
 		if $CPUParticles2D and $CPUParticles2D2 and $CPUParticles2D3:
 			$CPUParticles2D.restart()
 			$CPUParticles2D2.restart()
 			$CPUParticles2D3.restart()
 
 
-	for i in range(nodes.size()):
-		var muzzle = nodes[i]
-		var angle_deg = angles[i]
-		var bolt = bolt_scene.instantiate()
-		get_tree().current_scene.add_child(bolt)
-		bolt.global_position = muzzle.global_position
-		bolt.rotation = deg_to_rad(angle_deg)  # rotate laser
-		bolt.direction = Vector2.UP  # still moves UP, but Area2D multiplies by rotation
-		bolt.modulate = Color(0.2, 0.8, 1.0)
+	LaserShooter.shoot_lasers(
+		bolt_scene,
+		nodes,
+		Vector2.UP,
+		Color(0.2, 0.8, 1.0),
+		angles,
+		get_tree().current_scene,
+		laser_sound  # ✅ this is the correct AudioStream
+	)
+
 
 
 
