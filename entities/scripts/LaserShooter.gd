@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+# res://entities/scripts/LaserShooter.gd
+=======
+>>>>>>> b5e87e5c671f8ef207ecb5bb80f131b0764f13af
 extends Node
 
 static func shoot_lasers(
@@ -6,6 +10,15 @@ static func shoot_lasers(
 	direction: Vector2,
 	color: Color,
 	angles: Array = [],
+<<<<<<< HEAD
+	parent: Node = null
+) -> void:
+	if parent == null:
+		push_error("LaserShooter: parent node must be passed to add lasers!")
+		return
+
+	for i in range(muzzle_positions.size()):
+=======
 	parent: Node = null,
 	laser_sound: AudioStream = null
 ) -> void:
@@ -33,6 +46,7 @@ static func shoot_lasers(
 
 	# 🔫 Spawn lasers
 	for i in range(laser_count):
+>>>>>>> b5e87e5c671f8ef207ecb5bb80f131b0764f13af
 		var muzzle = muzzle_positions[i]
 		if not is_instance_valid(muzzle):
 			continue
@@ -45,10 +59,13 @@ static func shoot_lasers(
 		var angle = 0.0
 		if i < angles.size():
 			angle = deg_to_rad(angles[i])
+<<<<<<< HEAD
+=======
 		bolt.rotation = angle      # ✅ set rotation
 		bolt.direction = Vector2.UP
 		if i < angles.size():
 			angle = deg_to_rad(angles[i])
+>>>>>>> b5e87e5c671f8ef207ecb5bb80f131b0764f13af
 		bolt.direction = direction.rotated(angle)
 
 		parent.add_child(bolt)

@@ -4,6 +4,23 @@ extends CharacterBody2D
 @export var bolt_scene: PackedScene
 @export var fire_rate := 0.3
 @export var margin := 50   # padding from the screen edges
+<<<<<<< HEAD
+@export var health: int = 5
+@export var explosion_scene: PackedScene  # optional, for death effect
+
+var can_shoot := true
+var laser_level := 1  # 1 = single laser, 2 = triple, 3 = 5-laser spread
+var muzzle_nodes: Array
+
+var LaserShooter = preload("res://entities/scripts/LaserShooter.gd")
+
+func _ready():
+	add_to_group("player")  # For enemy targeting
+	muzzle_nodes = [$Muzzle, $MuzzleLeft, $MuzzleRight, $MuzzleFarLeft, $MuzzleFarRight]
+
+func upgrade_laser():
+	if laser_level < 3:
+=======
 var can_shoot := true
 var laser_level := 1  # 1 = single laser, 2 = triple, 3 = 5-laser spread
 var muzzle_nodes: Array
@@ -16,6 +33,7 @@ func _ready():
 
 func upgrade_laser():
 	if laser_level < 3:   # max level 3
+>>>>>>> b5e87e5c671f8ef207ecb5bb80f131b0764f13af
 		laser_level += 1
 		print("Laser upgraded to level %d" % laser_level)
 
@@ -39,7 +57,11 @@ func _physics_process(delta):
 	if Input.is_action_pressed("shoot"):
 		shoot_laser()
 		
+<<<<<<< HEAD
+	if Input.is_action_just_pressed("upgrade"):
+=======
 	if Input.is_action_just_pressed("upgrade"):  # Press 'U' to test upgrade
+>>>>>>> b5e87e5c671f8ef207ecb5bb80f131b0764f13af
 		upgrade_laser()
 
 func shoot_laser():
@@ -54,6 +76,24 @@ func shoot_laser():
 	if laser_level == 1:
 		nodes = [$Muzzle]
 		angles = [0]
+<<<<<<< HEAD
+	elif laser_level == 2:
+		nodes = [$Muzzle, $MuzzleLeft, $MuzzleRight]
+		angles = [0, -25, 25]
+	elif laser_level == 3:
+		nodes = [$Muzzle, $MuzzleLeft, $MuzzleRight, $MuzzleFarLeft, $MuzzleFarRight]
+		angles = [0, -25, 25, -50, 50]
+
+	for i in range(nodes.size()):
+		var muzzle = nodes[i]
+		var angle_deg = angles[i]
+		var bolt = bolt_scene.instantiate()
+		get_tree().current_scene.add_child(bolt)
+		bolt.global_position = muzzle.global_position
+		bolt.rotation = deg_to_rad(angle_deg)
+		bolt.direction = Vector2.UP
+		bolt.modulate = Color(0.2, 0.8, 1.0)
+=======
 		if $CPUParticles2D:
 			$CPUParticles2D.restart()
 	elif laser_level == 2:
@@ -86,7 +126,24 @@ func shoot_laser():
 
 
 
+>>>>>>> b5e87e5c671f8ef207ecb5bb80f131b0764f13af
 
 func _cooldown() -> void:
 	await get_tree().create_timer(fire_rate).timeout
 	can_shoot = true
+
+# -------------------------------
+# Damage Handling
+# -------------------------------
+func apply_damage(amount: int) -> void:
+	health -= amount
+	print("Player hit! Health:", health)
+	if health <= 0:
+		die()
+
+func die() -> void:
+	if explosion_scene:
+		var exp = explosion_scene.instantiate()
+		exp.global_position = global_position
+		get_tree().current_scene.add_child(exp)
+	queue_free()

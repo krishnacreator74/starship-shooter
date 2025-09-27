@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://dkh06j8pc3kft"]
+
+[ext_resource type="Script" uid="uid://bwodowe72aulb" path="res://entities/scripts/EnemyBullet.gd" id="1_kpqax"]
+[ext_resource type="Texture2D" uid="uid://dx30d0s34ssti" path="res://assests/laserGreen11.png" id="2_yfjhq"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qqqwf"]
+size = Vector2(1.8999999, 6.1)
+
+[node name="EnemyBullet" type="Area2D" groups=["enemy_bullet"]]
+collision_layer = 8
+script = ExtResource("1_kpqax")
+lifetime = 25.0
+
+[node name="BulletSprite" type="Sprite2D" parent="."]
+position = Vector2(2, 31)
+rotation = 3.1415927
+scale = Vector2(2, 1.1475314)
+texture = ExtResource("2_yfjhq")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(1.4999995, 29.999998)
+scale = Vector2(10, 10)
+shape = SubResource("RectangleShape2D_qqqwf")

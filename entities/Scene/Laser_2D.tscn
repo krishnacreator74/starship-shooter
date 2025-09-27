@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://dofmxgc3gjtdq"]
+
+[ext_resource type="Script" uid="uid://b2cingem43nfs" path="res://entities/scripts/Laser.gd" id="1_l68el"]
+[ext_resource type="AudioStream" uid="uid://bbcmbwschchch" path="res://assests/Laser1-sfx.mp3" id="2_yboef"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yboef"]
+size = Vector2(22, 38)
+
+[node name="Laser2D" type="Area2D"]
+script = ExtResource("1_l68el")
+laser_sound = ExtResource("2_yboef")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(1, -33)
+shape = SubResource("RectangleShape2D_yboef")
+
+[node name="Line2D" type="Line2D" parent="."]
+position = Vector2(1, -29)
+scale = Vector2(0.5, 0.43920478)
+points = PackedVector2Array(-1, -5, -1, -50, -1, 33)
+width = 1.76
+default_color = Color(0.9760813, 0.9722087, 0.97582716, 1)
