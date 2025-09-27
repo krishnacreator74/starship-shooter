@@ -13,7 +13,7 @@ static func shoot_lasers(
 		push_error("LaserShooter: parent node must be passed to add lasers!")
 		return
 
-	for i in muzzle_positions.size():
+	for i in range(muzzle_positions.size()):
 		var muzzle = muzzle_positions[i]
 		if not is_instance_valid(muzzle):
 			continue
