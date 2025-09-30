@@ -64,7 +64,7 @@ func shoot_laser() -> void:
 			nodes = [$Muzzle, $MuzzleLeft, $MuzzleRight]
 			angles = [0, -25, 25]
 		3:
-			nodes = [$Muzzle, $MuzzleLeft, $MuzzleRight, $MuzzleFarLeft, $MuzzleFarRight]
+			nodes = [$Muzzle, $MuzzleLeft, $MuzzleRight,$MuzzleLeft, $MuzzleRight]
 			angles = [0, -15, 15, -25, 25]
 
 	# parent = the scene root so bullets are at top-level (collisions simpler)

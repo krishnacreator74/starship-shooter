@@ -29,7 +29,7 @@ static func shoot_lasers(
 		if sound_length <= 0.0:
 			sound_length = 0.25
 		await parent.get_tree().create_timer(sound_length).timeout
-		if is_instance_valid(sfx):
+		if is_instance_valid(sfx): 
 			sfx.queue_free()
 
 	# Spawn lasers
