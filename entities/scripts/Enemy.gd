@@ -1,42 +1,41 @@
-extends Area2D
+extends CharacterBody2D
 
-@export var speed: float = 100.0       # Vertical downward speed
-@export var follow_speed: float = 80.0 # Horizontal follow speed
+@export var speed: float = 100.0        # vertical
+@export var follow_speed: float = 80.0  # horizontal follow
 @export var health: int = 3
 @export var bullet_scene: PackedScene
 @export var explosion_scene: PackedScene
 @export var fire_rate: float = 2.2
 
-@onready var muzzle = $MuzzlePoint
-@onready var fire_timer = $FireTimer
+@onready var muzzle: Node2D = $MuzzlePoint
+@onready var fire_timer: Timer = $FireTimer
 
 var player: Node = null
-var target_y: float = -320.0   # Enemy stops here vertically
+var target_y: float = -320.0
 var reached_target: bool = false
 
-func _ready():
+func _ready() -> void:
 	add_to_group("enemy")
 
-	# Start firing timer
+	# Timer hookup
 	fire_timer.wait_time = fire_rate
+	if not fire_timer.timeout.is_connected(_on_fire_timeout):
+		fire_timer.timeout.connect(_on_fire_timeout)
 	fire_timer.start()
-	var callback = Callable(self, "_on_fire_timeout")
-	if not fire_timer.is_connected("timeout", callback):
-		fire_timer.timeout.connect(callback)
 
-	# Get the player (assumes player is in "player" group)
-	player = get_tree().get_nodes_in_group("player").front() if get_tree().get_nodes_in_group("player").size() > 0 else null
+	# find player
+	var players = get_tree().get_nodes_in_group("player")
+	if players.size() > 0:
+		player = players.front()
 
 func _process(delta: float) -> void:
-	# Vertical movement down until target_y
 	if not reached_target:
 		position.y += speed * delta
 		if position.y >= target_y:
 			position.y = target_y
 			reached_target = true
 
-	# Horizontal follow after reaching target
-	if player:
+	if player and reached_target:
 		var dx = player.global_position.x - global_position.x
 		global_position.x += clamp(dx, -follow_speed * delta, follow_speed * delta)
 
@@ -48,16 +47,21 @@ func shoot() -> void:
 		return
 	var bullet = bullet_scene.instantiate()
 	bullet.global_position = muzzle.global_position if muzzle else global_position
-	bullet.direction = Vector2(0, 1)
-	get_tree().current_scene.add_child(bullet)
+	# enemy bullets expect var 'direction' in their script
+	bullet.direction = Vector2.DOWN
 	bullet.add_to_group("enemy_bullet")
+	get_tree().current_scene.add_child(bullet)
 
 func apply_damage(amount: int) -> void:
-	print("Ship Damaged")
 	health -= amount
+	print("Enemy hit! Health:", health)
 	if health <= 0:
-		if explosion_scene:
-			var expi = explosion_scene.instantiate()
-			expi.global_position = global_position
-			get_tree().current_scene.add_child(expi)
-		queue_free()
+		die()
+
+func die() -> void:
+	print("Enemy destroyed!")
+	if explosion_scene:
+		var expi = explosion_scene.instantiate()
+		expi.global_position = global_position
+		get_tree().current_scene.add_child(expi)
+	queue_free()

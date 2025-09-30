@@ -7,23 +7,30 @@ extends CharacterBody2D
 @export var health: int = 100
 @export var laser_level: int = 1  # 1=single,2=triple,3=5-laser
 @export var explosion_scene: PackedScene  # optional for death
+
 var can_shoot: bool = true
-
 var muzzle_nodes: Array
+
 var LaserShooter = preload("res://entities/scripts/LaserShooter.gd")
-var laser_sound = preload("res://assests/Laser1-sfx.mp3")  # Your laser sound
+var laser_sound = preload("res://assests/Laser1-sfx.mp3")  # optional
 
+func _ready() -> void:
+	add_to_group("player")
+	# Ensure these nodes exist in the Player scene. Add placeholders if not.
+	muzzle_nodes = [
+		$Muzzle,
+		$MuzzleLeft,
+		$MuzzleRight,
+		$MuzzleFarLeft,
+		$MuzzleFarRight
+	]
 
-func _ready():
-	add_to_group("player")  # For enemy targeting
-	muzzle_nodes = [$Muzzle, $MuzzleLeft, $MuzzleRight]
-
-func _physics_process(delta):
+func _physics_process(delta: float) -> void:
 	var dir := Input.get_vector("left", "right", "up", "down")
 	velocity = dir * speed
 	move_and_slide()
 
-	# Clamp inside viewport
+	# clamp inside viewport/camera
 	var cam = get_viewport().get_camera_2d()
 	if cam:
 		var viewport_size = get_viewport().get_visible_rect().size
@@ -37,11 +44,11 @@ func _physics_process(delta):
 	if Input.is_action_pressed("shoot"):
 		shoot_laser()
 
-	if Input.is_action_just_pressed("upgrade"):  # press 'U' to test upgrade
+	if Input.is_action_just_pressed("upgrade"):
 		upgrade_laser()
 
-func shoot_laser():
-	if not can_shoot:
+func shoot_laser() -> void:
+	if not can_shoot or bolt_scene == null:
 		return
 	can_shoot = false
 	_cooldown()
@@ -49,23 +56,26 @@ func shoot_laser():
 	var nodes: Array
 	var angles: Array
 
-	if laser_level == 1:
-		nodes = [$Muzzle]
-		angles = [0]
-	elif laser_level == 2:
-		nodes = [$Muzzle, $MuzzleLeft, $MuzzleRight]
-		angles = [0, -25, 25]
-	elif laser_level == 3:
-		nodes = [$Muzzle, $MuzzleLeft, $MuzzleRight,$MuzzleLeft, $MuzzleRight]
-		angles = [0, -15, 15, -25, 25]
+	match laser_level:
+		1:
+			nodes = [$Muzzle]
+			angles = [0]
+		2:
+			nodes = [$Muzzle, $MuzzleLeft, $MuzzleRight]
+			angles = [0, -25, 25]
+		3:
+			nodes = [$Muzzle, $MuzzleLeft, $MuzzleRight, $MuzzleFarLeft, $MuzzleFarRight]
+			angles = [0, -15, 15, -25, 25]
 
+	# parent = the scene root so bullets are at top-level (collisions simpler)
+	var parent_node = get_tree().current_scene
 	LaserShooter.shoot_lasers(
 		bolt_scene,
 		nodes,
 		Vector2.UP,
 		Color(0.2, 0.8, 1.0),
 		angles,
-		get_tree().current_scene,
+		parent_node,
 		laser_sound
 	)
 
@@ -73,7 +83,7 @@ func _cooldown() -> void:
 	await get_tree().create_timer(fire_rate).timeout
 	can_shoot = true
 
-func upgrade_laser():
+func upgrade_laser() -> void:
 	if laser_level < 3:
 		laser_level += 1
 		print("Laser upgraded to level %d" % laser_level)
