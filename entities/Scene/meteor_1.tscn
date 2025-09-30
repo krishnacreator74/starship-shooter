@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://nbj2fwadvptn"]
+
+[ext_resource type="Texture2D" uid="uid://bcesxn6mjo1vy" path="res://assests/meteor_1.png" id="1_rjax8"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_jx5y8"]
+
+[node name="Meteor1" type="Sprite2D"]
+texture = ExtResource("1_rjax8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_jx5y8")
+one_way_collision = true
+debug_color = Color(6.256998e-07, 0.35055292, 0.412469, 0.42)

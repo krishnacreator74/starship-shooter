@@ -1,0 +1,86 @@
+[gd_scene load_steps=12 format=3 uid="uid://v4yefn86l5bk"]
+
+[ext_resource type="Script" uid="uid://btarkc51jqsdr" path="res://entities/scripts/Enemy.gd" id="1_4gyqm"]
+[ext_resource type="Texture2D" uid="uid://dkj2k2lfsfjw6" path="res://assests/shp-2.png" id="1_7k104"]
+[ext_resource type="PackedScene" uid="uid://dkh06j8pc3kft" path="res://entities/Scene/EnemyBullet.tscn" id="2_qi2p4"]
+[ext_resource type="PackedScene" uid="uid://bhm4krjfiblne" path="res://entities/Scene/Explosion.tscn" id="3_i3d7f"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4gyqm"]
+size = Vector2(333, 226)
+
+[sub_resource type="Gradient" id="Gradient_dxifv"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_pwjut"]
+gradient = SubResource("Gradient_dxifv")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_n0g06"]
+lifetime_randomness = 0.47
+particle_flag_disable_z = true
+initial_velocity_min = 160.0
+initial_velocity_max = 160.0
+gravity = Vector3(0, 98, 0)
+scale_min = 0.5
+color = Color(1, 0.79607844, 0, 1)
+color_ramp = SubResource("GradientTexture1D_pwjut")
+
+[sub_resource type="Gradient" id="Gradient_epg4t"]
+offsets = PackedFloat32Array(0, 0.9866667)
+colors = PackedColorArray(0.48235294, 0.7294118, 0.13333334, 0.44705883, 0.41960785, 0.7019608, 0.40392157, 0.73333335)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_3yqyl"]
+gradient = SubResource("Gradient_epg4t")
+width = 2
+height = 2
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_wujgv"]
+particle_flag_disable_z = true
+initial_velocity_min = 40.0
+initial_velocity_max = 100.0
+gravity = Vector3(0, 98, 0)
+scale_min = 3.0
+scale_max = 4.0
+
+[node name="Enemy" type="Area2D" groups=["enemy"]]
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("1_4gyqm")
+bullet_scene = ExtResource("2_qi2p4")
+explosion_scene = ExtResource("3_i3d7f")
+
+[node name="ShipSprite" type="Sprite2D" parent="."]
+position = Vector2(3, 1.0000305)
+scale = Vector2(0.476, 0.356)
+texture = ExtResource("1_7k104")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(3, 4)
+shape = SubResource("RectangleShape2D_4gyqm")
+
+[node name="MuzzlePoint" type="Marker2D" parent="."]
+position = Vector2(1, 37)
+
+[node name="MuzzleParticles" type="GPUParticles2D" parent="."]
+position = Vector2(2, 62)
+rotation = 1.5707964
+emitting = false
+amount = 12
+lifetime = 3.22
+speed_scale = 5.0
+collision_base_size = 44.55
+trail_enabled = true
+trail_lifetime = 1.64
+process_material = SubResource("ParticleProcessMaterial_n0g06")
+
+[node name="EngineParticles" type="GPUParticles2D" parent="."]
+position = Vector2(3.9999542, -61.00001)
+rotation = -1.5550884
+scale = Vector2(0.99999994, 0.99999994)
+emitting = false
+amount = 4
+texture = SubResource("GradientTexture2D_3yqyl")
+lifetime = 0.25
+process_material = SubResource("ParticleProcessMaterial_wujgv")
+
+[node name="FireTimer" type="Timer" parent="."]
+wait_time = 2.1999999999999997
+autostart = true

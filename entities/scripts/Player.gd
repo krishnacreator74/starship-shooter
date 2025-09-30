@@ -9,10 +9,14 @@ var laser_level := 1  # 1 = single laser, 2 = triple, 3 = 5-laser spread
 var muzzle_nodes: Array
 var LaserShooter = preload("res://entities/scripts/LaserShooter.gd")
 var laser_sound = preload("res://assests/Laser1-sfx.mp3")
+@export var health: int = 100  # Player starting health
+@export var lifetime: float = 2.0
+
 
 func _ready():
-	# Collect muzzle nodes (make sure these exist in your Player scene)
-	muzzle_nodes = [$Muzzle, $MuzzleLeft, $MuzzleRight, $MuzzleFarLeft, $MuzzleFarRight]
+	# Collect muzzle nodes (make sure these exist in your Player scene)  a
+	muzzle_nodes = [$Muzzle, $MuzzleLeft, $MuzzleRight]
+
 
 func upgrade_laser():
 	if laser_level < 3:   # max level 3
@@ -73,6 +77,7 @@ func shoot_laser():
 			$CPUParticles2D3.restart()
 
 
+
 	LaserShooter.shoot_lasers(
 		bolt_scene,
 		nodes,
@@ -83,7 +88,15 @@ func shoot_laser():
 		laser_sound  # ✅ this is the correct AudioStream
 	)
 
+func apply_damage(amount: int) -> void:
+	health -= amount
+	print("Player hit! Health:", health)
+	if health <= 0:
+		die()
 
+func die():
+	print("Player destroyed!")
+	queue_free()  # Or handle respawn/game over
 
 
 
