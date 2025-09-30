@@ -6,7 +6,9 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_yboef"]
 size = Vector2(22, 44)
 
-[node name="Laser2D" type="Area2D"]
+[node name="Laser2D" type="Area2D" groups=["player_laser"]]
+collision_layer = 4
+collision_mask = 2
 script = ExtResource("1_l68el")
 laser_sound = ExtResource("2_yboef")
 

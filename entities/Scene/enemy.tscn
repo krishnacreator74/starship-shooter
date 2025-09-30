@@ -40,12 +40,16 @@ gravity = Vector3(0, 98, 0)
 scale_min = 3.0
 scale_max = 4.0
 
-[node name="Enemy" type="Area2D" groups=["enemy"]]
+[node name="Enemy" type="CharacterBody2D" groups=["enemy"]]
 collision_layer = 2
 collision_mask = 4
 script = ExtResource("1_4gyqm")
+speed = null
+follow_speed = null
+health = null
 bullet_scene = ExtResource("2_qi2p4")
 explosion_scene = ExtResource("3_i3d7f")
+fire_rate = null
 
 [node name="ShipSprite" type="Sprite2D" parent="."]
 position = Vector2(3, 1.0000305)
@@ -74,7 +78,7 @@ process_material = SubResource("ParticleProcessMaterial_n0g06")
 [node name="EngineParticles" type="GPUParticles2D" parent="."]
 position = Vector2(3.9999542, -61.00001)
 rotation = -1.5550884
-scale = Vector2(0.99999994, 0.99999994)
+scale = Vector2(0.9999999, 0.9999999)
 emitting = false
 amount = 4
 texture = SubResource("GradientTexture2D_3yqyl")
