@@ -8,8 +8,9 @@ size = Vector2(1.8999999, 6.1)
 
 [node name="EnemyBullet" type="Area2D" groups=["enemy_bullet"]]
 collision_layer = 8
+collision_mask = 5
 script = ExtResource("1_kpqax")
-lifetime = 25.0
+lifetime = 6.0
 
 [node name="BulletSprite" type="Sprite2D" parent="."]
 position = Vector2(2, 31)

@@ -4,11 +4,13 @@
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_li25b"]
 particle_flag_disable_z = true
+spread = 180.0
 initial_velocity_min = 180.0
 initial_velocity_max = 180.0
 gravity = Vector3(0, 98, 0)
-scale_min = 0.7
-color = Color(1, 0.6745098, 0.3529412, 1)
+scale_min = 2.0
+scale_max = 3.0
+color = Color(1, 0.5254902, 0, 1)
 
 [node name="Explosion" type="Node2D"]
 rotation = -1.5865043
@@ -16,5 +18,8 @@ script = ExtResource("1_oxoqp")
 
 [node name="ExplosionParticles" type="GPUParticles2D" parent="."]
 amount = 60
-lifetime = 0.6
+lifetime = 0.34
+speed_scale = 1.6600000000000001
+explosiveness = 0.51
+randomness = 1.0
 process_material = SubResource("ParticleProcessMaterial_li25b")
