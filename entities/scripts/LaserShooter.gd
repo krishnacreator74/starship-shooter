@@ -13,10 +13,7 @@ static func shoot_lasers(
 		push_error("LaserShooter: parent node must be passed to add lasers!")
 		return
 
-	var laser_count = muzzle_positions.size()
-
-	# 🔫 1. Spawn bullets immediately
-	for i in range(laser_count):
+	for i in range(muzzle_positions.size()):
 		var muzzle = muzzle_positions[i]
 		if not is_instance_valid(muzzle):
 			continue
@@ -25,26 +22,20 @@ static func shoot_lasers(
 		bolt.global_position = muzzle.global_position
 		bolt.modulate = color
 
-		# Rotate laser according to angle
+		# Calculate spread
 		var angle = 0.0
 		if i < angles.size():
 			angle = deg_to_rad(angles[i])
-		bolt.rotation = angle
+
 		bolt.direction = direction.rotated(angle)
+		bolt.rotation = bolt.direction.angle() + deg_to_rad(-90)  # adjust if sprite points up
 
 		parent.add_child(bolt)
 
-	# 🔊 2. Play ONE sound for the whole batch (non-blocking)
+	# Play sound once
 	if laser_sound:
 		var sfx = AudioStreamPlayer2D.new()
 		parent.add_child(sfx)
 		sfx.stream = laser_sound
-		sfx.autoplay = false
-
-		# Adjust volume depending on number of lasers
-		var volume_db = -6.0 * float(laser_count - 1)
-		volume_db = clamp(volume_db, -24.0, 0.0)
-		sfx.volume_db = volume_db
-
 		sfx.play()
 		sfx.connect("finished", Callable(sfx, "queue_free"))

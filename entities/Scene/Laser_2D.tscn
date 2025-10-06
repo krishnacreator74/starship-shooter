@@ -1,7 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://dofmxgc3gjtdq"]
+[gd_scene load_steps=3 format=3 uid="uid://dofmxgc3gjtdq"]
 
 [ext_resource type="Script" uid="uid://b2cingem43nfs" path="res://entities/scripts/Laser.gd" id="1_l68el"]
-[ext_resource type="AudioStream" uid="uid://bbcmbwschchch" path="res://assests/Laser1-sfx.mp3" id="2_yboef"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_yboef"]
 size = Vector2(22, 44)
@@ -10,7 +9,6 @@ size = Vector2(22, 44)
 collision_layer = 4
 collision_mask = 10
 script = ExtResource("1_l68el")
-laser_sound = ExtResource("2_yboef")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -1)
